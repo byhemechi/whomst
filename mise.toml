@@ -3,12 +3,13 @@ go = "1.26"
 "go:golang.org/x/vuln/cmd/govulncheck" = "latest"
 
 [env]
-_.file = ".envrc"
+ENV="localhost"
 TLS_CERT_PATH="cert/cert.pem"
 TLS_KEY_PATH="cert/key.pem"
 HTTP_LISTEN_HOST = ":80"
 HTTPS_LISTEN_HOST = ":443"
 HTTP3_LISTEN_HOST = ":17443"
+_.file = ".envrc"
 
 [tasks]
 start = "go run ."
