@@ -44,7 +44,7 @@ func JSONInfo(w http.ResponseWriter, r *http.Request) {
 func PlainInfo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "text/plain;charset=utf-8")
 	fmt.Fprintf(w, "RequestID: %s\n", middleware.GetReqID(r.Context()))
-	fmt.Fprintf(w, "Protocol: %s\n", r.RemoteAddr)
+	fmt.Fprintf(w, "Protocol: %s\n", r.Proto)
 	fmt.Fprintf(w, "RemoteAddr: %s\n", r.RemoteAddr)
 	r.Write(w)
 }
