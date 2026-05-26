@@ -120,7 +120,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(traceid.Middleware)
 
-	// Request logger.
+	r.Use(middleware.RequestID)
 	r.Use(httplog.RequestLogger(logger, &httplog.Options{
 		// Level defines the verbosity of the request logs:
 		// slog.LevelDebug - log all responses (incl. OPTIONS)
@@ -169,9 +169,8 @@ func main() {
 		}
 		return http.HandlerFunc(fn)
 	})
-	r.Use(middleware.Heartbeat("/ping"))
+	r.Use(middleware.Heartbeat("/healthz"))
 	r.Use(middleware.Compress(5))
-	r.Use(middleware.RequestID)
 	r.Use(middleware.GetHead)
 
 	r.HandleFunc("/", PlainInfo)
