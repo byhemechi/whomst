@@ -9,10 +9,22 @@ spec:
       labels:
         app: whomst
     spec:
+      volumes:
+        - name: certs
+          secret:
+            secretName: netzle-net-tls
       setHostnameAsFQDN: true
       containers:
         - name: application
           image: whomst
+          envFrom:
+            - configMapRef:
+                name: whomst-config
+
+          volumeMounts:
+            - name: certs
+              readOnly: true
+              mountPath: "/etc/tls"
           livenessProbe:
             initialDelaySeconds: 5
             httpGet:
@@ -23,7 +35,6 @@ spec:
             httpGet:
               port: 4000
               path: /healthz
-
           resources:
             requests:
               memory: "128Mi"
@@ -32,5 +43,7 @@ spec:
               memory: "512Mi"
               cpu: "500m"
           ports:
-            - containerPort: 4000
+            - containerPort: 80
               name: http
+            - containerPort: 443
+              name: https

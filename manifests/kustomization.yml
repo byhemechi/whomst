@@ -22,3 +22,7 @@ labels:
   - includeSelectors: true
     pairs:
       app: whomst
+configMapGenerator:
+  - name: whomst-config
+    envs:
+      - config.env

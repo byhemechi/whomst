@@ -5,9 +5,17 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "netzle.net,www.netzle.net,debug.netzle.net"
 spec:
+  type: LoadBalancer
   selector:
     app: whomst
   ports:
     - port: 80
+      protocol: TCP
       targetPort: http
-  type: LoadBalancer
+      appProtocol: kubernetes.io/h2c
+    - port: 443
+      protocol: TCP
+      targetPort: https
+    - port: 443
+      protocol: UDP
+      targetPort: https
