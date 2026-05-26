@@ -49,3 +49,4 @@ spec:
               name: https
             - containerPort: 443
               name: http3
+              protocol: UDP
