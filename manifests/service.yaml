@@ -21,4 +21,4 @@ spec:
     - name: http3
       port: 443
       protocol: UDP
-      targetPort: https
+      targetPort: http3
