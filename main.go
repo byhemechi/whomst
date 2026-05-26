@@ -19,15 +19,6 @@ type RequestInfo struct {
 }
 
 func HeaderEcho(w http.ResponseWriter, r *http.Request) {
-	// var info RequestInfo
-
-	// hostname, err := os.Hostname()
-	// if err != nil {
-	// 	w.WriteHeader(500)
-	// 	fmt.Fprintf(w, "error: %s", err)
-	// 	return
-	// }
-
 	fmt.Fprintf(w, "&http.Request{\n")
 
 	field := func(name string, value any) {
@@ -64,6 +55,9 @@ func main() {
 	var wg sync.WaitGroup
 
 	http.HandleFunc("/", HeaderEcho)
+	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "OK")
+	})
 	wg.Add(1)
 	go func() {
 		log.Printf("Starting secure server at https://localhost%v", SecureListenHost)
