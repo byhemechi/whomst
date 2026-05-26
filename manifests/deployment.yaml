@@ -7,7 +7,7 @@ spec:
   template:
     metadata:
       labels:
-        app: header-echo
+        app: whomst
     spec:
       setHostnameAsFQDN: true
       containers:
