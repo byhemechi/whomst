@@ -1,0 +1,10 @@
+[tools]
+go = "1.26"
+
+[env]
+_.file = ".envrc"
+TLS_CERT_PATH="cert/cert.pem"
+TLS_KEY_PATH="cert/key.pem"
+
+[tasks]
+start = "go run ."
