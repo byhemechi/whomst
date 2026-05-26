@@ -9,9 +9,7 @@ metadata:
     oci.oraclecloud.com/security-rule-management-mode: "NSG"
 spec:
   type: LoadBalancer
-  ipFamilyPolicy: SingleStack
-  ipFamilies:
-    - IPv4
+  ipFamilyPolicy: PreferDualStack
   externalTrafficPolicy: Local
   selector:
     app: whomst
@@ -25,7 +23,7 @@ spec:
       port: 443
       protocol: TCP
       targetPort: https
-    - name: http3
-      port: 443
-      protocol: UDP
-      targetPort: http3
+    # - name: http3
+    #   port: 443
+    #   protocol: UDP
+    #   targetPort: http3
