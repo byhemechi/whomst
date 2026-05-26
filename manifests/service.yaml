@@ -9,13 +9,16 @@ spec:
   selector:
     app: whomst
   ports:
-    - port: 80
+    - name: http
+      port: 80
       protocol: TCP
       targetPort: http
       appProtocol: kubernetes.io/h2c
-    - port: 443
+    - name: https
+      port: 443
       protocol: TCP
       targetPort: https
-    - port: 443
+    - name: http3
+      port: 443
       protocol: UDP
       targetPort: https
