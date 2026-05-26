@@ -9,7 +9,9 @@ metadata:
     oci.oraclecloud.com/security-rule-management-mode: "NSG"
 spec:
   type: LoadBalancer
-  ipFamilyPolicy: PreferDualStack
+  ipFamilyPolicy: SingleStack
+  ipFamilies:
+    - IPv4
   externalTrafficPolicy: Local
   selector:
     app: whomst
