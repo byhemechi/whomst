@@ -10,6 +10,7 @@ metadata:
 spec:
   type: LoadBalancer
   ipFamilyPolicy: PreferDualStack
+  externalTrafficPolicy: Local
   selector:
     app: whomst
   ports:
