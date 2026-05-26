@@ -28,12 +28,12 @@ spec:
           livenessProbe:
             initialDelaySeconds: 5
             httpGet:
-              port: 4000
+              port: 80
               path: /healthz
           readinessProbe:
             initialDelaySeconds: 5
             httpGet:
-              port: 4000
+              port: 80
               path: /healthz
           resources:
             requests:
