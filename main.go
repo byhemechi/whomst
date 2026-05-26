@@ -119,7 +119,7 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Use(traceid.Middleware)
-
+	r.Use(middleware.Heartbeat("/healthz"))
 	r.Use(middleware.RequestID)
 	r.Use(httplog.RequestLogger(logger, &httplog.Options{
 		// Level defines the verbosity of the request logs:
@@ -146,15 +146,6 @@ func main() {
 		// Select request/response headers to be logged explicitly.
 		LogRequestHeaders:  []string{"Host"},
 		LogResponseHeaders: []string{},
-
-		// Log all requests with invalid payload as curl command.
-		LogExtraAttrs: func(req *http.Request, reqBody string, respStatus int) []slog.Attr {
-			if respStatus == 400 || respStatus == 422 {
-				req.Header.Del("Authorization")
-				return []slog.Attr{slog.String("curl", httplog.CURL(req, reqBody))}
-			}
-			return nil
-		},
 	}))
 	r.Use(func(h http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
@@ -169,7 +160,6 @@ func main() {
 		}
 		return http.HandlerFunc(fn)
 	})
-	r.Use(middleware.Heartbeat("/healthz"))
 	r.Use(middleware.Compress(5))
 	r.Use(middleware.GetHead)
 
