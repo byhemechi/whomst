@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whomst
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: header-echo
+    spec:
+      setHostnameAsFQDN: true
+      containers:
+        - name: application
+          image: whomst
+          livenessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              port: 4000
+              path: /healthz
+          readinessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              port: 4000
+              path: /healthz
+
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 4000
+              name: http
