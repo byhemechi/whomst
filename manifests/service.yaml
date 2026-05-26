@@ -7,6 +7,7 @@ metadata:
     oci.oraclecloud.com/load-balancer-type: "nlb"
     oci-network-load-balancer.oraclecloud.com/is-preserve-source: "true"
     oci.oraclecloud.com/security-rule-management-mode: "NSG"
+    oci-network-load-balancer.oraclecloud.com/external-ip-only: "true"
 spec:
   type: LoadBalancer
   ipFamilyPolicy: PreferDualStack
