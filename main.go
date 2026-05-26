@@ -47,6 +47,7 @@ func HeaderEcho(w http.ResponseWriter, r *http.Request) {
 var (
 	InsecureListenHost = os.Getenv("HTTP_LISTEN_HOST")
 	SecureListenHost   = os.Getenv("HTTPS_LISTEN_HOST")
+	QUICListenHost     = os.Getenv("HTTP3_LISTEN_HOST")
 	TLSCertPath        = os.Getenv("TLS_CERT_PATH")
 	TLSKeyPath         = os.Getenv("TLS_KEY_PATH")
 )
@@ -58,20 +59,65 @@ func main() {
 	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "OK")
 	})
+
+	var handler http.Handler
+
+	quic_server := http3.Server{
+		Addr:    QUICListenHost,
+		Handler: handler,
+	}
+
+	https_server := http.Server{
+		Addr:    SecureListenHost,
+		Handler: handler,
+	}
+
+	https_server.Protocols = new(http.Protocols)
+	https_server.Protocols.SetHTTP1(true)
+
+	http_server := http.Server{
+		Addr:    InsecureListenHost,
+		Handler: handler,
+	}
+
+	http_server.Protocols = new(http.Protocols)
+	http_server.Protocols.SetHTTP1(true)
+	http_server.Protocols.SetUnencryptedHTTP2(true)
+
+	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.ProtoMajor < 3 {
+			err := quic_server.SetQUICHeaders(w.Header())
+
+			if err != nil {
+				fmt.Println("error:", err)
+			}
+		}
+		http.DefaultServeMux.ServeHTTP(w, r)
+	})
+
 	wg.Add(1)
 	go func() {
-		log.Printf("Starting secure server at https://localhost%v", SecureListenHost)
+		log.Printf("Starting secure server at %v", https_server.Addr)
 		defer wg.Done()
-		if err := http3.ListenAndServeTLS(SecureListenHost, TLSCertPath, TLSKeyPath, nil); err != nil {
+		if err := https_server.ListenAndServeTLS(TLSCertPath, TLSKeyPath); err != nil {
 			log.Fatal(err)
 		}
 	}()
+
 	wg.Add(1)
 	go func() {
-		addr := InsecureListenHost
-		log.Printf("Starting insecure server at http://localhost%v", addr)
+		log.Printf("Starting QUIC server at %v", quic_server.Addr)
 		defer wg.Done()
-		if err := http.ListenAndServe(addr, nil); err != nil {
+		if err := quic_server.ListenAndServeTLS(TLSCertPath, TLSKeyPath); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		log.Printf("Starting insecure server at %v", http_server.Addr)
+		defer wg.Done()
+		if err := http_server.ListenAndServe(); err != nil {
 			log.Fatal(err)
 		}
 	}()

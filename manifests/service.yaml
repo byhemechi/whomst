@@ -23,7 +23,7 @@ spec:
       port: 443
       protocol: TCP
       targetPort: https
-    # - name: http3
-    #   port: 443
-    #   protocol: UDP
-    #   targetPort: http3
+    - name: http3
+      port: 17443
+      protocol: UDP
+      targetPort: http3

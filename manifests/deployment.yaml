@@ -47,6 +47,6 @@ spec:
               name: http
             - containerPort: 443
               name: https
-            - containerPort: 443
+            - containerPort: 17443
               name: http3
               protocol: UDP
