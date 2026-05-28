@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: whomst
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "netzle.net,www.netzle.net,debug.netzle.net"
+    external-dns.alpha.kubernetes.io/hostname: "debug.netzle.net"
     oci.oraclecloud.com/load-balancer-type: "nlb"
     oci-network-load-balancer.oraclecloud.com/is-preserve-source: "true"
     oci.oraclecloud.com/security-rule-management-mode: "NSG"
